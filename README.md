@@ -1,4 +1,4 @@
-# 一些在工作中用到的 JavaScript 的奇技淫巧
+# 一些在工作中和阅读别人代码的时候看到的 JavaScript 的奇技淫巧
 
 ## 数组的操作
 ### 1 对一个数组进行全部的元素进行遍历看是不是符合某个条件,这里的元素都是非引用类型的
@@ -25,3 +25,18 @@
     someOFArray([1,3,4,5], x => x > 6) // false  所有的元素都是不符合这个规则的
     someOFArray([1,2,3,4], x => x > 2) // true 在数组中 3,4 都是符合条件的
 
+### 4 分割数组,两个数组,一个是要分割的,一个是分割的过滤器,基于过滤器将数组进行分割
+
+    let bifurcate = (arr, filter) => arr.reduce((acc, val, i) => (acc[filter[i] ? 0 : 1].push(val), acc), [[], []]);
+    // 解读一下这段代码: 首先 reduce 这个方法的返回值有四个,第一个是传入的参数也就是 [ [], [] ] 这个看起来比较奇怪的数组,因为切片以后的数组元素要分别 push 到一个数组中,这里就直接是做好了两个数组,方便后续的切片
+    // 那么 acc 是啥呢??它就是我们要传入的参数 [ [], [] ],这个参数是会循环进行赋值操作的,因此在返回的时候我们就能看到他的内容是 [ [a,b,c],[e,d,f]]
+    // val 就是对应的 arr 中的元素,而 i 就是当前的元素下标,
+    // 那么在这个方法中的  (acc[filter[i] ? 0 : 1].push(val), acc) 这一句就相当于是 let a = 1,let b = 2; 执行 a,b 的时候会在控制台返回 2 ,一样,先从左往右执行代码,然后返回最后一个值
+    // 就是等同于
+        const bifurcate = (arr, filter) => arr.reduce((acc, val, i) => {
+            acc[filter[i] ? 0 : 1].push(val);
+            return acc;
+        }, [[], []]);
+        console.log(bifurcate(['beep', 'boop', 'foo', 'bar'], [true, false, false, true]));
+
+### 5 根据输入的函数进行分割数组
