@@ -1,6 +1,7 @@
 # 一些在工作中和阅读别人代码的时候看到的 JavaScript 的奇技淫巧
 
 ## 数组的操作
+
 ### 1 对一个数组进行全部的元素进行遍历看是不是符合某个条件,这里的元素都是非引用类型的
 
     const arrayAll  = (arr ,fn = Boolean) => arr.every(fn)
